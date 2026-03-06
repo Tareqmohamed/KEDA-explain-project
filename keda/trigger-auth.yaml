@@ -1,0 +1,10 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-postgresql
+  namespace: job-processig
+spec:
+  secretTargetRef:
+  - parameter: connection
+    name: postgres-secret
+    key: connection

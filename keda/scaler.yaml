@@ -1,0 +1,37 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: job-consumer-scaler
+  namespace: job-processig
+spec:
+  scaleTargetRef:
+    name: job-consumer
+  minReplicaCount: 5
+  maxReplicaCount: 25
+  pollingInterval: 15
+  cooldownPeriod: 30
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 15 # Quick confirmation
+          policies:
+            - type: Pods
+              value: 10 # Remove up to 10 pods at once
+              periodSeconds: 15
+          selectPolicy: Max # Use the most aggressive policy
+  triggers:
+    - type: postgresql
+      metadata:
+        query: "SELECT COUNT(*) FROM jobs"
+        targetQueryValue: "5"
+        activationQueryValue: "2"
+      authenticationRef:
+        name: keda-trigger-auth-postgresql

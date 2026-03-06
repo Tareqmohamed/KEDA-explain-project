@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2026-02-28T13:59:37Z"
+  labels:
+    app: postgres
+  name: postgres
+  namespace: job-processig
+  resourceVersion: "43336"
+  uid: 3f3fde97-e9de-4f5e-b6c5-7d3ab0449dd4
+spec:
+  ports:
+  - name: "postgres"
+    port: 5432
+  selector:
+    app: postgres
+  clusterIP: None

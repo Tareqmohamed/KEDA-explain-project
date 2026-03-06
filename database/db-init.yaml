@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+  init.sql: |-
+    CREATE TABLE IF NOT EXISTS jobs (
+        id SERIAL PRIMARY KEY,
+        payload TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS done_jobs (
+        id INTEGER PRIMARY KEY,
+        completed_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_jobs_created ON jobs (created_at);
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2026-02-28T13:51:17Z"
+  name: db-init
+  namespace: job-processig
+  resourceVersion: "42932"
+  uid: e78965c7-3a2c-4e23-81fc-a6cba9f61a9a

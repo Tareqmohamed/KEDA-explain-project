@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: job-consumer
+  name: job-consumer
+  namespace: job-processig
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: job-consumer
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: job-consumer
+    spec:
+      volumes:
+        - name: consumer-py
+          configMap:
+            name: consumer-script
+      containers:
+      - image: python:3.11-slim
+        name: python
+        env:
+          - name: HOSTNAME 
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        command: [ "sh" , "-c" ]
+        args: 
+          - |
+            pip install psycopg2-binary > /dev/null 2>&1
+            python3 -u /tmp/consumer.py
+        volumeMounts:
+          - name: consumer-py
+            mountPath: /tmp/
+            
+        resources: {}
+status: {}
